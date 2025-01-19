@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulasi Distribusi Poisson</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Simulasi Distribusi Poisson</h1>
+      <form method="POST" onsubmit="return validateForm()">
+        <div class="form-group">
+          <label for="lambda_avg">Rata-rata pengunjung per jam (λ):</label>
+          <input type="number" step="0.1" name="lambda_avg" id="lambda_avg" required />
+        </div>
+        <div class="form-group">
+          <label for="k_expected">Jumlah pengunjung yang diharapkan (K):</label>
+          <input type="number" name="k_expected" id="k_expected" required />
+        </div>
+        <button type="submit" class="btn">Hitung</button>
+      </form>
+
+      <!-- Pesan Error -->
+      {% if data.error %}
+      <div class="error-message">
+        <p>{{ data.error }}</p>
+      </div>
+      {% endif %}
+
+      <!-- Hasil -->
+      {% if data.lambda_avg and data.k_expected %}
+      <h2>Hasil Perhitungan:</h2>
+
+      <!-- Tabel Parameter -->
+      <table class="result-table table-parameter">
+        <thead>
+          <tr>
+            <th class="text-center">Parameter</th>
+            <th class="text-center">Nilai</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Rata-rata pengunjung per jam (λ)</td>
+            <td>{{ data.lambda_avg }}</td>
+          </tr>
+          <tr>
+            <td>Jumlah pengunjung yang diharapkan (K)</td>
+            <td>{{ data.k_expected }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Tabel Probabilitas -->
+      <table class="result-table table-probability">
+        <thead>
+          <tr>
+            <th class="text-center">Keterangan</th>
+            <th class="text-center">Nilai</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Peluang tepat K pengunjung</td>
+            <td>{{ data.prob_exact_k }}</td>
+          </tr>
+          <tr>
+            <td>Peluang kurang dari K pengunjung</td>
+            <td>{{ data.prob_less_than_k }}</td>
+          </tr>
+          <tr>
+            <td>Peluang lebih dari K pengunjung</td>
+            <td>{{ data.prob_more_than_k }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {% endif %}
+    </div>
+
+    <script>
+      function validateForm() {
+        const lambdaAvg = document.getElementById("lambda_avg").value;
+        const kExpected = document.getElementById("k_expected").value;
+        if (lambdaAvg === "" || kExpected === "") {
+          alert("Semua field harus diisi!");
+          return false;
+        }
+        return true;
+      }
+    </script>
+  </body>
+</html>
